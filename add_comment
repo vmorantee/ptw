@@ -1,0 +1,16 @@
+<?php
+include 'connection.php';
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $user_id = $_SESSION['user_id'];
+    $post_id = $_POST['post_id'];
+    $comment_text = $_POST['comment_text'];
+
+    $sql = "INSERT INTO comments (post_id, user_id, comment_text) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("iis", $post_id, $user_id, $comment_text);
+    $stmt->execute();
+
+    header("Location: eventpage.php?event_id=" . $post_id); // Redirect to avoid form resubmission
+}
